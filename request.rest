@@ -1,0 +1,107 @@
+POST http://localhost:4001/auth/signup
+Content-Type: application/json
+
+{
+  "email": "hamburgercheese",
+  "username": "hamburgercheese",
+  "password": "hamburgercheese"
+}
+
+###
+POST http://localhost:4001/auth/signin
+Content-Type: application/json
+
+{
+  "username": "hamburgercheese",
+  "password": "hamburgercheese"
+}
+
+###
+DELETE http://localhost:4001/auth/signout
+Content-Type: application/json
+
+ {
+  "token": "eyJhbGciOiJIUzI1NiJ9.c29tZXRoaW5n.nUvhqEQYVA46RgwetwGWYOWoFEnxkwllc3uvqu9BB_A"
+ }
+//when signing out and back in the refresh token stays the same always. Fixing here needs to be done
+###
+POST http://localhost:4001/auth/token
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.c29tZXRoaW5n.nUvhqEQYVA46RgwetwGWYOWoFEnxkwllc3uvqu9BB_A"
+}
+
+###
+GET http://localhost:8000/lists
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InFzc3dlcnR5eXUiLCJpYXQiOjE1ODY3MzQ3NzMsImV4cCI6MTU4NjczNjU3M30.e9nucu9JMSuCz0L7YSPYESv891h1MRYT2osMg98IqXY
+
+###
+PUT http://localhost:8000/lists
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNvbWV0aGluZyIsImlhdCI6MTU4NjgwNzE3MCwiZXhwIjoxNTg2ODA4OTcwfQ.N081GrnSbvixb8Odb-70CIYV0pUwJipia5WrTHfRy5I
+ 
+{
+"list": [
+  {
+    "number": 60,
+    "person": "Tyler",
+    "action": "rocked",
+    "object": "rock"
+  },
+  {
+    "number": 43,
+    "person": "dave",
+    "action": "runs",
+    "object": "blueberry"
+  },
+  {
+    "number": 12,
+    "person": "Irina",
+    "action": "slips",
+    "object": "stairs"
+  },
+  {
+    "number": 13,
+    "person": "Irina",
+    "action": "slips",
+    "object": "stairs"
+  },
+  {
+    "number": 89,
+    "person": "Irina",
+    "action": "slips",
+    "object": "stairs"
+  }
+]
+}
+
+###
+PUT http://localhost:8000/lists/5e940e7d3b2b731561386570
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNvbWV0aGluZyIsImlhdCI6MTU4NjgwNzE3MCwiZXhwIjoxNTg2ODA4OTcwfQ.N081GrnSbvixb8Odb-70CIYV0pUwJipia5WrTHfRy5I
+
+{
+  "list":   {
+    "number": 13,
+    "person": "Sasha Chapurin",
+    "action": "drank",
+    "object": "wisky"
+  }
+} 
+
+###
+DELETE http://localhost:8000/lists/5e945c0bc597591da1496785
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhhbWJ1cmdlcmNoZWVzZSIsImlhdCI6MTU4NjgxMTk3OSwiZXhwIjoxNTg2ODEzNzc5fQ.IOZMNP_8x1lQJwoeVqEiEJrsDnmV3QQC1tXed_Qp-dk
+
+###
+DELETE http://localhost:8000/deleteaccount
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhhbWJ1cmdlcmNoZWVzZSIsImlhdCI6MTU4NjgxMzIzMywiZXhwIjoxNTg2ODE1MDMzfQ.EhF41YJcH1-10ylFFU_W5U_cS6RR8H5DrmSmIWumlcc
+
+{
+  "username": "hamburgercheese",
+  "password": "hamburgercheese",
+  "token": "eyJhbGciOiJIUzI1NiJ9.aGFtYnVyZ2VyY2hlZXNl.z9PxXPQaZ4T0JhIMZtC7Ba7FylfDMEcsTrh0pYgxTjI"
+}
