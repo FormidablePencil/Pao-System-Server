@@ -5,15 +5,17 @@ import jwt from 'jsonwebtoken'
 import { UserModel } from '../../models/userModel'
 import RefreshTokenModal from '../../models/tokenModal'
 import generateAccessToken from '../../middleware/generateAccessToken'
+import { router_responses } from '../routerResponses'
+
 
 
 singIn.post('/signin', async (req, res) => { //as long as the clinet has the refresh token it can sign in
   const { password, username, email } = req.body
   const userInfo: any = await UserModel.findOne({ username })
-  if (userInfo === null) return res.sendStatus(401)
+  if (userInfo === null) return res.status(401).send({message: router_responses.invalid_credentials})
   try {
     if (await bcrypt.compare(password, userInfo.password) === false &&
-      email === userInfo.email === false) return res.sendStatus(404)
+    email === userInfo.email === false) return res.status(404).send({message: router_responses.invalid_credentials})
     const accessToken = await generateAccessToken(req.body.username)
     const refreshToken = await jwt.sign(req.body.username, process.env.ACCESS_TOKEN_SECRET) //replace with generated RefreshToken
     await RefreshTokenModal.deleteOne({ token: refreshToken })

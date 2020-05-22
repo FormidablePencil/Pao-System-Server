@@ -23,12 +23,12 @@ interface ReqTypes extends Request {
 deleteUserAccount.delete('/deleteaccount', authenticateToken, async (req: ReqTypes, res, next) => {
 
   console.log(req.username, 'req.username')
-  if (!req.body.password || !req.body.username || !req.body.token) return res.status(400).send('all required data not given')
+  if (!req.body.password || !req.body.username || !req.body.token) return res.status(400).send({ message: 'all required data not given' })
   console.log(req.username, 'req.usernamereq.username')
   const userInfo: any = await UserModel.findOne({ username: req.username }, (err) => returnErr(err, res, next))
-  if (userInfo === null) return res.status(404).send("user does not exist")
+  if (userInfo === null) return res.status(404).send({ message: "user does not exist" })
   if (await bcrypt.compare(req.body.password, userInfo.password) === false &&
-    req.body.email === userInfo.email) return res.status(404).send('something went wrong')
+    req.body.email === userInfo.email) return res.status(404).send({ message: 'something went wrong' })
   const paoData: any = await PaoModel.findOne({ username: req.username }, (err) => returnErr(err, res, next))
   console.log(paoData, 'paoDatapaoDatapaoData')
   let deletedRecord
@@ -42,13 +42,14 @@ deleteUserAccount.delete('/deleteaccount', authenticateToken, async (req: ReqTyp
   try {
     await RefreshTokenModal.deleteOne({ token: req.body.token }, (err) => {
       console.log('#################')
-      returnErr(err, res, next)})
+      returnErr(err, res, next)
+    })
     await PaoModel.deleteOne({ username: req.username }, (err) => {
       console.log('do absolute nothing')
     })
     await UserModel.deleteOne({ username: req.username }, (err) => returnErr(err, res, next))
     if (deletedRecord) deletedRecord.save()
-    return res.status(200).send(`successfully deleted ${req.username}'s account`)
+    return res.status(200).send({message: `successfully deleted ${req.username}'s account`})
   } catch (error) {
     console.log('@@@@@@@@@@@@@@@@@@@')
     return res.json({ message: error })

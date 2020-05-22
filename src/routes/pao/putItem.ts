@@ -1,69 +1,44 @@
 import express, { Request } from 'express'
 import authenticateToken from '../../middleware/authenticationToken'
-import { PaoModel, PaoDocumentModel } from '../../models/paoModel'
+import { PaoModel, PaoDocumentTypes } from '../../models/paoModel'
+import { v4 as uuidv4 } from 'uuid';
 const putItem = express.Router()
 
 interface PutItemReq extends Request {
   username: string
-  body: {
-    id: number
-    list: {
-      number: string
-      person: string
-      action: string
-      object: string
-    }
-  }
+  number: string
+  person: string
+  action: string
+  object: string
 }
 
-putItem.put('/:id', authenticateToken, async (req: PutItemReq, res) => {
-  if (!req.params.id) return res.status(400).send('missing id feild')
-  console.log(req.params.id)
+putItem.put('/newdoc', authenticateToken, async (req: PutItemReq, res) => {
+  console.log(req.body)
+  // console.log('here')
   let paolist: any = await PaoModel.findOne({ username: req.username })
-  const newDocument = new PaoDocumentModel({
-    number: req.body.list.number,
-    person: req.body.list.person,
-    action: req.body.list.action,
-    object: req.body.list.object
-  })
-  let updated = false
-   paolist.list = paolist.list.map((document: any) => {
-    if (document._id.toString() === req.params.id.toString()) {
-      console.log('object')
-      updated = true
-      console.log(newDocument, 'newDocument')
-      newDocument._id = document._id //this will work but id will be a string... is that fine?
-      return newDocument
-    } else return document
-  })
-  console.log(newDocument)
-  // console.log(updatedCollection)
-  if (updated) {
-    try {
-      await paolist.save()
-      res.status(201).send('saved updated document')
-    } catch (err) {
-      res.json({ message: err })
-    }
-  } else {
-    let alreadyExisting = false
-    paolist.list.map((item: any) => {
-      if (item.number === req.body.list.number) {
-        alreadyExisting = true
-      }
-    })
-    if (alreadyExisting) return res.status(400).send('Item with that number exists. Cannot push document to collection. If you want to update an item then "number" must correlate with req id')
-    paolist.list.push(newDocument)
-    // console.log(paolist)
-    try {
-      await paolist.save()
-      res.status(201).send('pushed new document to collection and saved')
-    } catch (err) {
-      res.json({ message: err })
-    }
+  // console.log(paolist, 'paolist.listpaolist.list')
+  const newDocument: PaoDocumentTypes = {
+    _id: uuidv4(),
+    number: req.body.number,
+    person: req.body.person,
+    action: req.body.action,
+    object: req.body.object
   }
-  // console.log(req.params.id, 'req.params.id')
-  // console.log(req.body)
+  let alreadyExisting = false
+  paolist.list.map((item: any) => {
+    if (item.number === req.body.number) {
+      alreadyExisting = true
+    }
+  })
+  if (alreadyExisting) return res.status(400).send({ message: 'Document with that number exists.', message2: 'Cannot push document to collection. If you want to update an item then "number" must correlate with req id' })
+  paolist.list.push(newDocument)
+  try {
+    await paolist.save()
+    res.status(201).send({ message: 'pushed new document to collection and saved', document: newDocument })
+  } catch (err) {
+    // console.log(err)
+    res.json({ message: err })
+  }
 })
 
 export default putItem

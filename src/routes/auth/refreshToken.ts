@@ -14,7 +14,7 @@ refreshToken.post('/token', async (req: TokenReq, res) => {
   if (tokenFromDb === null) return res.sendStatus(404)
   if (!refreshToken === tokenFromDb.token) return res.sendStatus(401)
   jwt.verify(refreshToken, process.env.ACCESS_TOKEN_SECRET, (err: any, username: any) => {
-    if (err) return res.sendStatus(403)
+    if (err) return res.status(403).send({ message: 'refresh token invalid' })
     const accessToken = generateAccessToken({ name: username.name })
     res.json({ accessToken, refreshToken })
   })

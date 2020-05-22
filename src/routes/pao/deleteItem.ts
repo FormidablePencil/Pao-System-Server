@@ -17,13 +17,13 @@ deleteItem.delete('/:id', authenticateToken, async (req: DeleteItemReq, res) => 
     if (item._id.toString() === req.params.id.toString()) {
       itemToDeleteFound = true
       return
-    } 
+    }
     return item
   })
-  if (!itemToDeleteFound) return res.status(400).send('requested item to be deleted was not found by id')
+  if (!itemToDeleteFound) return res.status(400).send({ message: 'requested item to be deleted was not found by id' })
   try {
     pao.save()
-    res.status(200).send(`deleted item from ${req.username}'s list successfully`)
+    res.status(200).send({ message: `deleted item from ${req.username}'s list successfully` })
   } catch (error) {
     res.json({ message: error })
   }

@@ -12,7 +12,7 @@ const checkIfDuplicated = async (req: any, res: any, next: any) => {
       }
     })
   })
-  if (duplicates) return res.status(400).send('duplicate documents error')
+  if (duplicates) return res.status(400).send({ message: 'duplicate documents error' })
   req.filteredOutDuplicates = filteredOutDiplicates
   next()
 }

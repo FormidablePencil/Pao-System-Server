@@ -11,7 +11,7 @@ getList.get('/', authenticateToken, async (req: GetPaoListsReq, res) => {
   console.log(req.username)
   const pao = await PaoModel.findOne({ username: req.username })
   console.log(pao, 'pao')
-  if (pao === null) return res.sendStatus(404)
+  if (pao === null) return res.status(404).send({message: `list does not exist under ${req.username} account`})
   res.json({ pao })
 }) 
 

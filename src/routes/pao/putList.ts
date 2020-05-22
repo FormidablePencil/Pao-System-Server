@@ -6,24 +6,26 @@ import { PutPaoDataReq } from '../../types/paoTypes';
 import { PaoModel } from '../../models/paoModel';
 
 postList.put('/', authenticateToken, async (req: PutPaoDataReq, res) => {
-  if (!req.body.list) return res.sendStatus(400)
+  console.log('hit putList')
+  console.log(req.body)
+  if (!req.body.list) return res.status(400).send({message: 'no list sent'})
     const paoList = new PaoModel({
       username: req.username,
       list: req.body.list
     })
-  if (!paoList) return res.status(404).send('malformed')
+  if (!paoList) return res.status(404).send({message: 'malformed'})
   const foundCollection = await PaoModel.find({ username: req.username })
   if (foundCollection.length === 0) {
     try {
       await paoList.save()
-      res.status(201).send('created new')
+      res.status(201).send({message: 'created new'})
     } catch (err) {
       res.json({ message: err })
     }
   } else {
     try {
       await PaoModel.replaceOne({ "username": req.username }, { "username": req.username, "list": req.body.list })
-      res.status(201).send('completely replaced')
+      res.status(201).send({message: 'completely replaced'})
     } catch (err) {
       res.json({ message: err })
     }

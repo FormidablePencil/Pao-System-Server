@@ -8,12 +8,11 @@ import jwt from 'jsonwebtoken'
 const authenticateToken = (req: any, res: any, next: any): void => {
   const authHeader = req.headers['authorization'] //check header 
   const token = authHeader && authHeader.split(' ')[1] //if header has token then split
-  if (token === null) return res.sendStatus(401) //else failed
-
+  if (token === null) return res.status(401).send({ message: 'token not given' }) //else failed
   //compars client's token from header with the one on server
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,
     (err: any, obj: any) => {
-      if (err) return res.status(401).send('token does not exist')
+      if (err) return res.status(401).send({ message: 'token does not exist' })
       req.username = obj.username
       next() //if all went well then go onto the next part
     })

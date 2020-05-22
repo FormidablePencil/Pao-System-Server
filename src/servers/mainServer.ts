@@ -5,19 +5,20 @@ const port = 8000
 import 'dotenv/config'
 import getList from '../routes/pao/getList'
 import putList from '../routes/pao/putList'
-import putItem from '../routes/pao/putItem'
 import deleteItem from '../routes/pao/deleteItem'
 import deleteUserAccount from '../routes/pao/deleteUserAccount'
+import putItem from '../routes/pao/putItem'
+import updateItem from '../routes/pao/updateItem'
 
 
 mongoose.set('useCreateIndex', true);
 
 const server = express()
 
-server.use(cors())
+// server.use(cors())
 server.use(express.json())
 
-server.use('/lists', getList, putList, putItem, deleteItem)
+server.use('/lists', updateItem, getList, putList, putItem, deleteItem)
 server.use('/', deleteUserAccount)
 
 mongoose.connect(process.env.DENNIS, { useNewUrlParser: true, useUnifiedTopology: true }, () => console.log('connected to db'))
