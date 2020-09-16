@@ -5,3 +5,7 @@ export interface TokenReq extends Request {
     token: string
   }
 }
+
+export enum authServerResponses {
+  successfully_refreshed_token = 'returned fresh new tokens'
+}

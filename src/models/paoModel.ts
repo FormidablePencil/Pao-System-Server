@@ -14,7 +14,7 @@ const PaoSchema = new Schema({
   list: [
     {
       _id: { type: String, unique: true },
-      number: Number,
+      number: { type: Number, unique: false },
       person: String,
       action: String,
       object: String,

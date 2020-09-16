@@ -7,6 +7,7 @@ import { UserModel } from '../../models/userModel'
 import { PaoModel } from '../../models/paoModel'
 import RefreshTokenModal from '../../models/tokenModal'
 import generateAccessToken from '../../middleware/generateAccessToken'
+import { v4 as uuidv4 } from 'uuid';
 
 //@
 signUp.post('/signup', async (req, res, next) => {
@@ -18,14 +19,15 @@ signUp.post('/signup', async (req, res, next) => {
   const userModel = new UserModel({ username, password: hashedPassword, email })
   const paoList = new PaoModel({
     username,
-    list: [
-      {
-        number: null,
-        person: null,
-        action: null,
-        object: null,
-      }
-    ]
+    // list: [
+    //   {
+    //     _id: uuidv4(),
+    //     number: null,
+    //     person: null,
+    //     action: null,
+    //     object: null,
+    //   }
+    // ]
   })
   console.log(paoList)
   try {
@@ -38,6 +40,7 @@ signUp.post('/signup', async (req, res, next) => {
     res.json({ accessToken, refreshToken }) //! sending to client token
 
   } catch (err) {
+    console.log(err)
     res.json({ message: err })
   }
 })
