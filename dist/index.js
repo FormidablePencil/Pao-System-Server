@@ -4,29 +4,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-// import mongoose from 'mongoose'
-// import cors from 'cors'
-const port = 8000;
-const router = express_1.default.Router();
-const app = express_1.default();
-// app.use(cors())
-app.use(express_1.default.json());
-// app.use('/', index)
-// router.get('/', (req, res, next) => {
-//   res.render('index', {title: 'Express'})
-// })
-app.get("/", (req, res) => {
-    res.send("Hello ld!");
+const mongoose_1 = __importDefault(require("mongoose"));
+const cors_1 = __importDefault(require("cors"));
+require("dotenv/config");
+// main routes
+const getList_1 = __importDefault(require("./routes/pao/getList"));
+const putList_1 = __importDefault(require("./routes/pao/putList"));
+const deleteItem_1 = __importDefault(require("./routes/pao/deleteItem"));
+const deleteUserAccount_1 = __importDefault(require("./routes/pao/deleteUserAccount"));
+const putItem_1 = __importDefault(require("./routes/pao/putItem"));
+const updateItem_1 = __importDefault(require("./routes/pao/updateItem"));
+// auth routes
+const refreshToken_1 = __importDefault(require("./routes/auth/refreshToken"));
+const signin_1 = __importDefault(require("./routes/auth/signin"));
+const signup_1 = __importDefault(require("./routes/auth/signup"));
+const signout_1 = __importDefault(require("./routes/auth/signout"));
+const port = process.env.PORT;
+mongoose_1.default.set("useCreateIndex", true);
+const server = express_1.default();
+server.use(cors_1.default());
+server.use(express_1.default.json());
+server.use("/lists", updateItem_1.default, getList_1.default, putList_1.default, putItem_1.default, deleteItem_1.default);
+server.use("/", deleteUserAccount_1.default);
+server.use("/auth", refreshToken_1.default);
+server.use("/auth", signin_1.default);
+server.use("/auth", signup_1.default);
+server.use("/auth", signout_1.default);
+mongoose_1.default.connect(process.env.MONGO_MAIN, { useNewUrlParser: true, useUnifiedTopology: true }, () => console.log("connected to db"));
+mongoose_1.default.connection
+    .once("open", () => console.log("connection to mongoDb successful"))
+    .on("error", (err) => {
+    console.log(err, "failed to connect to mongoDb");
 });
-// mongoose.connect(process.env.SOME_USER, { useNewUrlParser: true, useUnifiedTopology: true }, () => console.log('connected to db'))
-// mongoose.connection
-//   .once('open', () => console.log('connection to mongoDb successful'))
-//   .on('error', (err) => {
-//     console.log('err in connecting to mongoDb')
-//   })
-app.listen(() => {
-    console.log(`server started at http://localhost:80802`);
+server.listen(2999, () => {
+    console.log(`server started at http://localhost:${port}`);
 });
-// module.exports = app
-// console.log with a logging framework such as winston
 //# sourceMappingURL=index.js.map
