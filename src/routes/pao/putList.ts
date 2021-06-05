@@ -5,6 +5,8 @@ import authenticateToken from '../../middleware/authenticationToken';
 import { PutPaoDataReq } from '../../types/paoTypes';
 import { PaoModel } from '../../models/paoModel';
 
+// interface  RequestExtended extends Request, PutPaoDataReq {};
+
 postList.put('/', authenticateToken, async (req: PutPaoDataReq, res) => {
   console.log('hit putList')
   console.log(req.body)
@@ -24,7 +26,7 @@ postList.put('/', authenticateToken, async (req: PutPaoDataReq, res) => {
     }
   } else {
     try {
-      await PaoModel.replaceOne({ "username": req.username }, { "username": req.username, "list": req.body.list })
+      // await PaoModel.replaceOne({ "username": req.username }, { "username": req.username, "list": req.body.list })
       res.status(201).send({message: 'completely replaced'})
     } catch (err) {
       res.json({ message: err })
