@@ -45,6 +45,6 @@ mongoose.connection
     console.log(err, "failed to connect to mongoDb");
   });
 
-server.listen(2999, () => {
+server.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });
